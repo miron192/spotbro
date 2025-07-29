@@ -24,3 +24,30 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.rbc-off-range-bg {
+  background-color: transparent !important;
+}
+
+.rbc-day-bg.rbc-today {
+  background-color: #1e293b !important;
+}
+/* Textul din header: ex. "July 2025" */
+.rbc-toolbar-label {
+  color: white !important;
+}
+
+.rbc-toolbar button {
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  background-color: transparent !important;
+}
+
+.rbc-toolbar button:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.rbc-toolbar button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px white !important;
+}
