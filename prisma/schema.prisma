@@ -14,47 +14,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id           String           @id @default(uuid())
-  email        String        @unique
-  name         String
-  weight       Float?        // masa userului (kg)
-  height       Float?        // înălțime (cm)
-  activityLevel String?         // cât de activ e, ex: 1-5
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String
+  weight        Float?
+  height        Float?
+  activityLevel String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  bio           String?
+  image         String?
 
   // relații
-  friends      FriendRequest[] @relation("Friendships")
-  friendOf     FriendRequest[] @relation("FriendshipsInverse")
-  dailyLogs    DailyLog[]
+  friendships1 Friendship[] @relation("FriendshipUser1")
+  friendships2 Friendship[] @relation("FriendshipUser2")
+  friends       FriendRequest[] @relation("Friendships")
+  friendOf      FriendRequest[] @relation("FriendshipsInverse")
+  dailyLogs     DailyLog[]
+  dailyCalories DailyCalories[]
 }
 
 model FriendRequest {
-  id         String   @id @default(uuid())
-  requester  User     @relation("Friendships", fields: [requesterId], references: [id])
+  id          String @id @default(uuid())
+  requester   User   @relation("Friendships", fields: [requesterId], references: [id])
   requesterId String
-  receiver   User     @relation("FriendshipsInverse", fields: [receiverId], references: [id])
-  receiverId String
+  receiver    User   @relation("FriendshipsInverse", fields: [receiverId], references: [id])
+  receiverId  String
 
-  status     String   // "pending", "accepted", "rejected"
-  createdAt  DateTime @default(now())
+  status    String // "pending", "accepted", "rejected"
+  createdAt DateTime @default(now())
 
-  @@unique([requesterId, receiverId])
+  @@unique([requesterId, receiverId], name: "requester_receiver_unique")
+}
+
+model Friendship {
+  id        String   @id @default(uuid())
+  user1     User     @relation("FriendshipUser1", fields: [user1Id], references: [id])
+  user1Id   String
+  user2     User     @relation("FriendshipUser2", fields: [user2Id], references: [id])
+  user2Id   String
+  createdAt DateTime @default(now())
 }
 
 model DailyLog {
-  id           String    @id @default(uuid())
-  user         User      @relation(fields: [userId], references: [id])
-  userId       String
-  date         DateTime  // data calendaristică (poate începe în ziua aia)
-  startTime    DateTime  // ora când a început activitatea
-  endTime      DateTime  // ora când a terminat activitatea
-  calories     Int       // calorii consumate în timpul ăsta
-  workout      String    // descriere ce a făcut la sală
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  date      DateTime // data calendaristică (poate începe în ziua aia)
+  startTime DateTime // ora când a început activitatea
+  endTime   DateTime // ora când a terminat activitatea
+  workout   String // descriere ce a făcut la sală
 
-  createdAt    DateTime  @default(now())
+  createdAt DateTime @default(now())
 }
 
+model DailyCalories {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  calories  Int
+  date      DateTime @default(dbgenerated("(CURRENT_DATE)")) // doar data, fără ora
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt
 
+  @@unique([userId, date])
+}

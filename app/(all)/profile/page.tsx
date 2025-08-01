@@ -1,4 +1,6 @@
 import ActivityToday from "@/components/ActivityToday";
+import FriendsList from "@/components/FriendsList";
+import SearchFriend from "@/components/SearchFriend";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
@@ -7,68 +9,57 @@ import { redirect } from "next/navigation";
 
 const ProfilePage = async () => {
   const session = await getServerSession(authOptions);
+
   if (!session) {
     redirect("/api/auth/signin");
   }
-  const friends = [
-    {
-      name: "Andrei",
-      nickname: "Leg Day King",
-      image: "/friends/andrei.jpg",
-      profileUrl: "/profile/andrei",
-    },
-  ];
 
   return (
     <>
-      <header className="flex items-center justify-around text-gray-200 p-4 rounded-xl mt-4 shadow-md bg-white/5 backdrop-blur-sm ">
-        <div className="flex items-center justify-around p-4 gap-4 ">
+      <header className="flex flex-col sm:flex-row items-center justify-between text-gray-200 p-4 rounded-xl mt-4 shadow-md bg-white/5 backdrop-blur-sm gap-6 sm:gap-0">
+        {/* Profil + info */}
+        <div className="flex items-center gap-4">
           <Image
             className="rounded-full"
             src={session?.user?.image || ""}
             alt="Profile Image"
-            width={140}
-            height={140}
+            width={100}
+            height={100}
+            priority
           />
           <div>
-            <h2 className="">{session?.user?.name || ""}</h2>
+            <h2 className="text-lg font-semibold">
+              {session?.user?.name || ""}
+            </h2>
             <p className="text-gray-400 text-sm">
               {session?.user?.email || ""}
             </p>
-            <p>Bio</p>
+            <p className="text-sm mt-1">{session?.user?.bio || ""}</p>
           </div>
         </div>
-        <div className="px-5 py-2 border-2 border-white/20 text-white font-medium rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-md bg-white/30 hover:bg-white/50 transition-all duration-200">
-          <Link href={"/profile/settings"} className="">
+
+        {/* Buton Edit Profile */}
+        <div>
+          <Link
+            href="/profile/settings"
+            className="inline-block px-5 py-2 border-2 border-white/20 text-white font-medium rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-md bg-white/30 hover:bg-white/50 transition-all duration-200"
+          >
             Edit Profile
           </Link>
         </div>
       </header>
+
       <section className="max-w-3xl mx-auto mt-8 bg-white/10 border border-white/20 rounded-2xl shadow-xl p-6 text-white">
-        <h3 className="text-xl font-semibold mb-6">Your SpotBros</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-          {friends.map(({ name, nickname, image, profileUrl }) => (
-            <Link
-              href={profileUrl}
-              key={name}
-              className="flex flex-col items-center gap-2 hover:bg-white/10 rounded-lg p-4 transition"
-            >
-              <Image
-                src={image}
-                alt={name}
-                width={80}
-                height={80}
-                className="rounded-full border border-white/20"
-              />
-              <p className="font-semibold text-center">{name}</p>
-              <p className="text-green-400 italic text-sm text-center">
-                {nickname}
-              </p>
-            </Link>
-          ))}
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4 sm:gap-0">
+          <h3 className="text-xl font-semibold">Your SpotBros</h3>
+          <SearchFriend fromUserId={session?.user?.id || ""} />
         </div>
+
+        <FriendsList userId={session?.user?.id || ""} />
       </section>
-      <ActivityToday />
+
+      <ActivityToday user={session?.user} />
+
       <div className="h-5"></div>
     </>
   );

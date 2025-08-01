@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "DailyCalories" ALTER COLUMN "date" SET DEFAULT (CURRENT_DATE);

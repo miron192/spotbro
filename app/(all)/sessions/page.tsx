@@ -2,26 +2,69 @@
 
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addHours } from "date-fns";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { useSession } from "next-auth/react";
 
 const localizer = momentLocalizer(require("moment"));
 
 const CalendarPage = () => {
-  const [events, setEvents] = useState([
-    {
-      title: "Push Day",
-      start: new Date(),
-      end: addHours(new Date(), 1),
-    },
-  ]);
+  const { data: session } = useSession();
 
-  const handleSelect = ({ start, end }: any) => {
-    const title = prompt("Event name:");
-    if (title) {
-      setEvents([...events, { start, end, title }]);
-    }
+  const [events, setEvents] = useState<
+    { title: string; start: Date; end: Date }[]
+  >([]);
+
+  const handleSelect = async ({ start, end }: any) => {
+    const workout = prompt("Workout name (e.g., Push Day):");
+    if (!workout) return;
+
+    const userId = session?.user?.id;
+
+    const newEvent = {
+      title: workout,
+      start,
+      end,
+    };
+
+    setEvents([...events, newEvent]);
+
+    await fetch("/api/events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        date: start,
+        startTime: start,
+        endTime: end,
+        workout,
+      }),
+    });
   };
+  useEffect(() => {
+    const fetchLogs = async () => {
+      if (!session?.user?.id) return;
+
+      const res = await fetch(`/api/events?userId=${session.user.id}`);
+      const data = await res.json();
+
+      if (Array.isArray(data)) {
+        const formatted = data.map((log) => ({
+          title: log.workout,
+          start: new Date(log.startTime),
+          end: new Date(log.endTime),
+        }));
+
+        setEvents((prev) => [...prev, ...formatted]);
+      }
+    };
+
+    fetchLogs();
+  }, [session]);
 
   return (
     <div className="flex items-center justify-around ">

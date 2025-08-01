@@ -8,6 +8,7 @@ interface User {
   height?: number;
   activityLevel?: string;
   image?: string;
+  bio?: string;
 }
 
 interface Props {
@@ -20,6 +21,7 @@ const ProfileForm = ({ user }: Props) => {
   const [activityLevel, setActivityLevel] = useState(user.activityLevel ?? "");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [bio, setBio] = useState(user.bio ?? "");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,6 +37,7 @@ const ProfileForm = ({ user }: Props) => {
           weight: Number(weight),
           height: Number(height),
           activityLevel,
+          bio,
         }),
       });
 
@@ -52,6 +55,16 @@ const ProfileForm = ({ user }: Props) => {
     <div className=" flex items-center justify-center px-4 py-12  text-white">
       <div className="w-full max-w-md backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl shadow-2xl p-8">
         <form onSubmit={handleSubmit} className="space-y-4 text-white">
+          <div>
+            <label className="block mb-1 text-sm font-medium">Bio</label>
+            <input
+              type="text"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+              placeholder="Enter your bio"
+            />
+          </div>
           <div>
             <label className="block mb-1 text-sm font-medium">
               Weight (kg)

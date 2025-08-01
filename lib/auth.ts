@@ -25,26 +25,29 @@ export const authOptions: AuthOptions = {
           data: {
             email: user.email!,
             name: user.name!,
-            activityLevel: "low", // Default activity level
+            image: user.image || "",
+            activityLevel: "low",
           },
         });
       }
       return true;
     },
     async jwt({ token, user }) {
-      // La prima autentificare, token-ul va primi datele user-ului din baza ta
-      if (user) {
-        const dbUser = await prisma.user.findUnique({
-          where: { email: user.email! },
-        });
-        if (dbUser) {
-          token.id = dbUser.id;
-          token.name = dbUser.name;
-          token.email = dbUser.email;
-          token.activityLevel = dbUser.activityLevel;
-          // poți pune și alte câmpuri aici
-        }
+      const dbUser = await prisma.user.findUnique({
+        where: { email: token.email! },
+      });
+
+      if (dbUser) {
+        token.id = dbUser.id;
+        token.name = dbUser.name;
+        token.email = dbUser.email;
+        token.activityLevel = dbUser.activityLevel;
+        token.bio = dbUser.bio || "";
+        token.image = dbUser.image || "";
+        token.weight = dbUser.weight || 0;
+        token.height = dbUser.height || 0;
       }
+
       return token;
     },
 
@@ -53,8 +56,13 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        session.user.activityLevel = token.activityLevel as number;
+        session.user.activityLevel = token.activityLevel as string;
+        session.user.bio = token.bio as string;
+        session.user.image = token.image as string;
+        session.user.weight = token.weight as number;
+        session.user.height = token.height as number;
       }
+
       return session;
     },
     async redirect({ baseUrl }) {

@@ -1,26 +1,43 @@
 import Link from "next/link";
 import React from "react";
-import { FaUserFriends } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { FaRegCalendar } from "react-icons/fa6";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import LogoutButton from "./LogoutButton";
+import { MdOutlineNotifications } from "react-icons/md";
 
 const Header = async () => {
   const session = await getServerSession(authOptions);
   return (
-    <header className="flex  p-3 sticky top-0 z-50 sm:justify-between bg-white/5 w-full flex-col sm:flex-row items-center backdrop-blur-lg shadow-md rounded-b-2xl mx-auto">
-      <Link href="/" className="text-lg font-bold text-white">
+    <header
+      className="
+    sticky top-0 z-50
+    w-screen max-w-full
+    bg-white/5 backdrop-blur-lg
+    shadow-md rounded-b-2xl
+    flex flex-col sm:flex-row
+    items-center
+    px-3 py-2
+    sm:justify-between
+  "
+    >
+      <Link
+        href="/"
+        className="text-lg font-bold text-white hidden md:inline-block"
+      >
         Spot<span className="text-green-500">Bro</span>
       </Link>
       {session ? (
-        <div className="flex gap-4 text-2xl text-white">
+        <div className="flex gap-4 text-2xl text-white md:justify-between">
           <Link href="/profile">
             <CgProfile className="inline-block mr-1 transition-transform duration-200 hover:scale-110" />
           </Link>
           <Link href="/sessions">
             <FaRegCalendar className="inline-block mr-1 transition-transform duration-200 hover:scale-110" />
+          </Link>
+          <Link href="/profile/requests">
+            <MdOutlineNotifications className="inline-block mr-1 transition-transform duration-200 hover:scale-110" />
           </Link>
 
           <LogoutButton />
@@ -32,7 +49,7 @@ const Header = async () => {
         >
           Login
         </Link>
-      )}
+      )}{" "}
     </header>
   );
 };

@@ -1,5 +1,18 @@
-// next.config.js
-module.exports = {
+import { NextConfig } from "next";
+const nextConfig: NextConfig = {
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.watchOptions = {
+        ignored: [
+          "**/Cookies/**",
+          "**/Application Data/**",
+          "**/Local Settings/**",
+        ],
+      };
+    }
+    return config;
+  },
+
   images: {
     remotePatterns: [
       {
@@ -9,3 +22,5 @@ module.exports = {
     ],
   },
 };
+
+export default nextConfig;
