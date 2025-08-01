@@ -3,7 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-const page = async ({ params }: { params: { id: string } }) => {
+const page = async ({ params }: any) => {
   const id = params.id;
   const session = await getServerSession(authOptions);
   if (id === session?.user?.id) {
