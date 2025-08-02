@@ -29,6 +29,7 @@ const ActivityToday = ({ user }: Props) => {
         setCalories(data.calories ?? 0);
       } catch (error) {
         setCalories(0);
+        console.error("Error fetching today's calories:", error);
       }
     }
     fetchCalories();
@@ -60,6 +61,7 @@ const ActivityToday = ({ user }: Props) => {
       setMessage("Calories saved successfully!");
     } catch (err) {
       setMessage("Update failed. Please try again.");
+      console.error("Error saving calories:", err);
     } finally {
       setLoading(false);
     }

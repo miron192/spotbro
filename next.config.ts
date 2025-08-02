@@ -1,12 +1,15 @@
-import { NextConfig } from "next";
+import type { NextConfig } from "next";
+
 const nextConfig: NextConfig = {
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer }: { isServer: boolean }) => {
     if (!isServer) {
       config.watchOptions = {
         ignored: [
           "**/Cookies/**",
           "**/Application Data/**",
           "**/Local Settings/**",
+          "**/AppData/**",
+          "**/node_modules/**",
         ],
       };
     }
@@ -22,5 +25,4 @@ const nextConfig: NextConfig = {
     ],
   },
 };
-
 export default nextConfig;

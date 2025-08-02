@@ -3,12 +3,11 @@
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useEffect, useState } from "react";
-import { addHours } from "date-fns";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+
 import { useSession } from "next-auth/react";
 
-const localizer = momentLocalizer(require("moment"));
+import moment from "moment";
+const localizer = momentLocalizer(moment);
 
 const CalendarPage = () => {
   const { data: session } = useSession();
@@ -17,7 +16,7 @@ const CalendarPage = () => {
     { title: string; start: Date; end: Date }[]
   >([]);
 
-  const handleSelect = async ({ start, end }: any) => {
+  const handleSelect = async ({ start, end }: { start: Date; end: Date }) => {
     const workout = prompt("Workout name (e.g., Push Day):");
     if (!workout) return;
 

@@ -59,6 +59,7 @@ const UserPage = ({
         }
         const data: User = await res.json();
         setUser(data);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message || "Unknown error");
       } finally {
@@ -113,7 +114,7 @@ const UserPage = ({
         <div className="bg-white/5 backdrop-blur-md p-6 rounded-xl shadow-md">
           {todayLog ? (
             <h3 className="text-xl font-semibold mb-2">
-              Today's calories:{" "}
+              Today&apos;s calories:
               <span className="font-normal">{todayLog.calories}</span>
             </h3>
           ) : (
@@ -123,7 +124,7 @@ const UserPage = ({
       </section>
 
       <div className="bg-white/5 backdrop-blur-md p-6 rounded-xl shadow-md flex flex-col gap-2 mt-8">
-        <h2 className="font-semibold text-xl">{user.name}'s Friends</h2>
+        <h2 className="font-semibold text-xl">{user.name}&apos;s Friends</h2>
         <FriendsList userId={id} />
       </div>
     </main>

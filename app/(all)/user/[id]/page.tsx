@@ -2,7 +2,7 @@ import UserPage from "@/components/UserPage";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const page = async ({ params }: any) => {
   const id = params.id;
   const session = await getServerSession(authOptions);
