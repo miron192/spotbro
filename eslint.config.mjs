@@ -9,13 +9,11 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
-  // Aplicați extensiile
+export default [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
-  // Aplicați reguli DOAR pe fișierele tale sursă
   {
-    files: ["src/**/*.{js,ts,jsx,tsx}"],
+    files: ["src/**/*.{ts,tsx,js,jsx}"], // 👈 doar codul tău
     rules: {
       "@typescript-eslint/no-this-alias": "off",
       "@typescript-eslint/no-unused-expressions": [
@@ -26,16 +24,6 @@ const eslintConfig = [
           allowTaggedTemplates: true,
         },
       ],
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-empty-object-type": "warn",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-        },
-      ],
     },
   },
 ];
-
-export default eslintConfig;
