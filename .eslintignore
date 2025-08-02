@@ -1,4 +1,8 @@
+# Build folders
 .next/
 dist/
 build/
+
+# Generated Prisma client
+prisma/generated/
 node_modules/
