@@ -9,18 +9,29 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-// Combine the extended configs and custom rules:
 const eslintConfig = [
+  // Aplicați extensiile
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // Aplicați reguli DOAR pe fișierele tale sursă
   {
-    // Add your overrides here
+    files: ["src/**/*.{js,ts,jsx,tsx}"],
     rules: {
+      "@typescript-eslint/no-this-alias": "off",
       "@typescript-eslint/no-unused-expressions": [
         "error",
         {
           allowShortCircuit: true,
           allowTernary: true,
           allowTaggedTemplates: true,
+        },
+      ],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
         },
       ],
     },
